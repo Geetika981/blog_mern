@@ -3,6 +3,16 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.models.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+const getUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
+  if (!user) {
+    throw new ApiError(400, "unauthorized access");
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "user fetched successfully"));
+});
+
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password, about } = req.body;
   if (!username || !email || !about || !password) {
@@ -11,7 +21,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
-  if (!existedUser) {
+  if (existedUser) {
     throw new ApiError(400, "User already exists");
   }
   if (password.length < 8) {
@@ -38,49 +48,55 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, registeredUser, "user registered successfully"));
 });
 
-const generateAccessToken = asyncHandler(async (userId) => {
+const generateAccessAndRefreshToken = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
     throw new ApiError(400, "invalid credentials");
   }
   const accessToken = await user.generateAccessToken();
+
   return { accessToken };
-});
+};
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    throw new ApiError(400, "all fields are required");
+  const { username, email, password } = req.body;
+  if ((!username && !email) || !password) {
+    throw new ApiError(400, "All fields are required");
   }
-  const user = await User.findOne({ username });
+  const user = await User.findOne({
+    $or: [{ username }, { email }],
+  });
+
   if (!user) {
     throw new ApiError(400, "User does not exists");
   }
+
   const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) {
-    throw new ApiError(400, "Wrong credentials");
+    throw new ApiError(400, "Invalud credentials");
   }
-  const { accessToken } = await generateAccessToken(user._id);
+
+  const { accessToken } = await generateAccessAndRefreshToken(user._id);
+  // console.log({accessToken});
+
   const loggedInUser = await User.findById(user._id).select("-password");
-  const options = {
-    httpOnly: true,
-    secure: true,
-    path: "/",
-    same_site: "none",
-  };
 
   return res
-    .cookie("accessToken", accessToken, options)
+    .cookie("accessToken", accessToken, {
+      path: "/",
+      httpOnly: true,
+      same_site: "none",
+      secure: true,
+    })
     .status(200)
     .json(
       new ApiResponse(
         200,
-        { user: loggedInUser, accessToken, refreshToken },
+        { user: loggedInUser, accessToken },
         "user logged in successfully"
       )
     );
 });
-
 const logoutUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
@@ -126,4 +142,4 @@ const updateUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedUser, "user updated successfully"));
 });
 
-export { registerUser, loginUser, logoutUser, updateUser };
+export { registerUser, loginUser, logoutUser, updateUser,getUser };

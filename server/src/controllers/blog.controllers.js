@@ -3,15 +3,38 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { isValidObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 const getAllBlogs = asyncHandler(async (req, res) => {
-  const blogs = await Blog.find();
+  const blogs = await Blog.aggregate([
+    {
+      $match: {
+        fetch: "Yes",
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              username: 1,
+              profile: 1,
+            },
+          },
+        ],
+      },
+    },
+  ]);
   if (!blogs) {
     throw new ApiError(400, "No blogs are created yet");
   }
   return res
     .status(200)
-    .json(new ApiResponse(200, blogs, "All bloga are fetched successfully"));
+    .json(new ApiResponse(200, blogs, "All blogs are fetched successfully"));
 });
 
 const createBlog = asyncHandler(async (req, res) => {
@@ -82,7 +105,7 @@ const updateBlog = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedBlog, "Blog updated successfully"));
 });
 const getMyBlogs = asyncHandler(async (req, res) => {
-  const blogs = await Blog.aggragate([
+  const blogs = await Blog.aggregate([
     {
       $match: {
         owner: new mongoose.Types.ObjectId(req.user._id),
@@ -118,11 +141,50 @@ const getBlogOfParticularUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, blogs, "all blogs are fetched successfully"));
 });
 
+const getBlogById = asyncHandler(async (req, res) => {
+  const { blogId } = req.params;
+  if(!isValidObjectId(blogId)){
+    throw new ApiError(400,"invalid blog id");
+  }
+
+  const blog = await Blog.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(blogId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              username: 1,
+              profile: 1,
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  if (!blog) {
+    throw new ApiError(400, "Invalid blog id");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, blog, " blog is fetched successfully"));
+});
+
 export {
   createBlog,
   deleteBlog,
   updateBlog,
   getBlogOfParticularUser,
   getAllBlogs,
+  getBlogById,
   getMyBlogs,
 };

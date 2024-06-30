@@ -6,12 +6,15 @@ import {
   updateBlog,
   getBlogOfParticularUser,
   getMyBlogs,
+  getBlogById
 } from "../controllers/blog.controllers.js";
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
+
 
 const router = Router();
 
 router.route("/getAllBlogs").get(getAllBlogs);
+router.route("/getBlogById/:blogId").get(verifyJWT,getBlogById)
 router.route("/create-blog").post(verifyJWT, createBlog);
 router.route("/deleteblog/:blogId").delete(verifyJWT, deleteBlog);
 router.route("/update-blog/:blogId").patch(verifyJWT, updateBlog);
