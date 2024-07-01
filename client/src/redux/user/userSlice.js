@@ -4,7 +4,8 @@ const initialState = {
   currentuser: null,
   loading: false,
   error: false,
-  blogs:[]
+  blogs:[],
+  comments:[]
 };
 
 const userSlice = createSlice({
@@ -28,7 +29,7 @@ const userSlice = createSlice({
       state.error = false;
     },
     signInSuccess: (state, action) => {
-      console.log(action.payload),
+      // console.log(action.payload),
         (state.currentuser = action.payload),
         (state.loading = false),
         (state.error = false);
@@ -61,6 +62,9 @@ const userSlice = createSlice({
     },
     getblogs:(state,action)=>{
       state.blogs=action.payload;
+    },
+    getComments:(state,action)=>{
+      state.comments=action.payload;
     }
   },
 });
@@ -71,6 +75,7 @@ export const {
   signInFailure,
   signInSuccess,
   logoutSuccess,
+  getComments,
   logoutFailure,
   updateuserStart,
   updateuserFailure,

@@ -22,6 +22,7 @@ const MyBlogs = () => {
     fetchData();
   }, []);
 
+  // console.log(blogs[0]._id);
 
   return (
     <ul>

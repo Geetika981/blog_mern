@@ -4,7 +4,7 @@ import {
   signInStart,
   signInFailure,
   signInSuccess,
-} from "../redux/user/userSlice.js";
+} from "../../redux/user/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

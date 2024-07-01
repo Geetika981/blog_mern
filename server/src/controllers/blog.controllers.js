@@ -125,7 +125,7 @@ const getBlogOfParticularUser = asyncHandler(async (req, res) => {
   if (!isValidObjectId(userId)) {
     throw new ApiError(400, "No user with this Id exists");
   }
-  const blogs = await Blog.aggragate([
+  const blogs = await Blog.aggregate([
     {
       $match: {
         owner: new mongoose.Types.ObjectId(userId),
@@ -144,6 +144,10 @@ const getBlogOfParticularUser = asyncHandler(async (req, res) => {
 const getBlogById = asyncHandler(async (req, res) => {
   const { blogId } = req.params;
   if(!isValidObjectId(blogId)){
+    throw new ApiError(400,"invalid blog id");
+  }
+  const blo=await Blog.findById(blogId);
+  if(!blo){
     throw new ApiError(400,"invalid blog id");
   }
 

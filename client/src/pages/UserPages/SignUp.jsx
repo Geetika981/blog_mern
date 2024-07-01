@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {registerInFailure,
   registerInSuccess,
-  registerInStart } from "../redux/user/userSlice.js"
+  registerInStart } from "../../redux/user/userSlice.js"
 
 const SignUp = () => {
   const navigate = useNavigate();

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const BlogById = () => {
   const params = useParams();
+  const navigate=useNavigate();
   const [blog, setBlog] = useState();
   const [error, setError] = useState(false);
   const { id } = params;
@@ -31,6 +32,9 @@ const BlogById = () => {
   }, []);
 
   // console.log(blog);
+  const handleClick=async()=>{
+    navigate(`/userblog/${blog[0].owner[0]._id}`)
+  }
   return (
     <div>
       {!blog ? (
@@ -39,9 +43,12 @@ const BlogById = () => {
         <div>
           <img src={blog[0].imageUrl} alt={blog[0].title} />
           <h1>{blog[0].title}</h1>
+          <p>{blog[0].description}</p>
+          <div onClick={handleClick} >
           <img src={blog[0].owner[0].profile} />
           <h2>{blog[0].owner[0].username}</h2>
-          <p>{blog[0].description}</p>
+          </div>
+
           <h4>{blog[0].updatedAt}</h4>
         </div>
       )}

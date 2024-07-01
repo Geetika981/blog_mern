@@ -5,8 +5,8 @@ import {
   getblogs,
   signInFailure,
   signInSuccess,
-} from "../redux/user/userSlice";
-import Blog from "./Blog.jsx";
+} from "../../redux/user/userSlice.js";
+import Blog from "../BlogPages/Blog.jsx";
 
 const Home = () => {
   const dispatch = useDispatch();
