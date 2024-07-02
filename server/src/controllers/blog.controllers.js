@@ -32,6 +32,7 @@ const getAllBlogs = asyncHandler(async (req, res) => {
   if (!blogs) {
     throw new ApiError(400, "No blogs are created yet");
   }
+  
   return res
     .status(200)
     .json(new ApiResponse(200, blogs, "All blogs are fetched successfully"));

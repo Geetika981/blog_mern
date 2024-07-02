@@ -9,7 +9,7 @@ const BlogByMe = ({item}) => {
       setFormData({ ...formData, [e.target.id]: e.target.value });
     };
     // console.log(formData);
-    console.log(item);
+    // console.log(item);
     const handleSubmit = async (e) => {
         setDisable(true)
         e.preventDefault();
@@ -22,7 +22,7 @@ const BlogByMe = ({item}) => {
             body:JSON.stringify(formData)
         })
         const data=await res.json();
-        console.log(data);
+        // console.log(data);
       };
       // console.log(formData);
       const handleUpdateClick=()=>{

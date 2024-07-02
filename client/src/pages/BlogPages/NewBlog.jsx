@@ -7,7 +7,7 @@ const NewBlog = () => {
     const handleChange=(e)=>{
         setFormData({...formData,[e.target.id]:e.target.value});
     }
-    console.log(formData);
+    // console.log(formData);
     const handleSubmit=async(e)=>{
         e.preventDefault();
         const res=await fetch('http://localhost:4000/api/v1/blog/create-blog',{
@@ -19,7 +19,7 @@ const NewBlog = () => {
             body:JSON.stringify(formData)
         })
         const data=await res.json();
-        console.log(data);
+        // console.log(data);
         if(data.success===false){
             return;
         }
