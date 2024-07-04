@@ -6,14 +6,15 @@ import {registerInFailure,
   registerInStart } from "../../redux/user/userSlice.js"
 
 const SignUp = () => {
+  const [error,setError]=useState(false);
   const navigate = useNavigate();
   const [formdata, setFormdata] = useState({});
-  const {error,loading}=useSelector((state)=>state.user);
+  const {loading}=useSelector((state)=>state.user);
   const dispatch=useDispatch();
   const handleChange = (e) => {
+    setError(false);
     setFormdata({ ...formdata, [e.target.id]: e.target.value });
   };
-  // console.log(formdata);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -31,6 +32,7 @@ const SignUp = () => {
       );
       const data = await response.json();
       if (data.success == false) {
+        setError(data.message);
         dispatch(registerInFailure(data.message));
         return;
       }
@@ -44,7 +46,7 @@ const SignUp = () => {
     }
   };
   return (
-    <div className="w-[50%] mx-auto  flex flex-col gap-4">
+    <div className="w-[40%] mx-auto  flex flex-col gap-4">
       <h1 className="mx-auto text-3xl uppercase mt-20">Register</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <input
@@ -75,7 +77,7 @@ const SignUp = () => {
           placeholder="Tell us more about Yourself"
           onChange={handleChange}
         />
-        <button className="p-3 bg-blue-600 text-white rounded-xl" type="submit">
+        <button className="p-3 bg-orange-400 text-white rounded-xl" type="submit">
         {loading ? "Loading..." : "Sign-up"}
         </button>
       </form>
@@ -85,7 +87,7 @@ const SignUp = () => {
           SignIn
         </Link>
       </div>
-      {/* <p className="text-red-900">{error && error}</p> */}
+      <p className="text-red-900">{error && error}</p>
     </div>
   );
 };

@@ -11,7 +11,7 @@ const Header = () => {
     dispatch(logoutSuccess());
   };
   return (
-    <div className="bg-slate-300 w-[100%]">
+    <div className="bg-orange-200 w-[100%]">
       <header className="flex justify-between mx-auto  w-[90%]">
         <div className=" text-3xl cursor-pointer font-bold p-3">
           <Link to={"/"}> Blog </Link>

@@ -28,10 +28,10 @@ const Home = () => {
     fetchBlogs();
   }, []);
   return (
-    <ul className="">
+    <ul className=" flex flex-col gap-4 w-[100%]  mx-auto">
       {blogs &&
         blogs.map((item, index) => (
-          <li className="" key={index}>
+          <li className=" mx-auto m-10" key={index}>
             <Blog
               id={item._id}
               desc={item.description}
@@ -43,10 +43,10 @@ const Home = () => {
           </li>
         ))}
       {blogs.length===0 && (
-        <div className="h-100vh flex flex-col gap-10">
-          <h1 className="font-bold text-3xl mt-20px ">No Blogs to show..</h1>
-          <p>Be the first to show your creativity on any topic..</p>
-          <button onClick={()=>{naviagte('/new-blog')}} >Click here to create the blog</button>
+        <div className="flex flex-col mx-auto mt-[15%] gap-6">
+          <h1 className="font-bold text-4xl mt-20px ">Publish your passions, your way</h1>
+          <p className="mx-auto text-xl">Create a unique and beautiful blog easily.</p>
+          <button className=" bg-orange-400 p-3 rounded-lg uppercase" onClick={()=>{naviagte('/new-blog')}} >Create Your blog</button>
         </div>
       )}
     </ul>

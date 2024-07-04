@@ -10,9 +10,10 @@ import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const [formdata, setFormdata] = useState({});
+  const [error,setError]=useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { error, loading } = useSelector((state) => state.user);
+  const {  loading } = useSelector((state) => state.user);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -29,6 +30,7 @@ const SignIn = () => {
       const data = await response.json();
       // console.log(data);
       if (data.success == false) {
+        setError(data.message);
         dispatch(signInFailure(data.message));
         return;
       }
@@ -40,13 +42,14 @@ const SignIn = () => {
     }
   };
   const handleChange = (e) => {
+    setError(false);
     setFormdata({ ...formdata, [e.target.id]: e.target.value });
   };
   console.log(formdata);
   return (
     <div>
       <form
-        className="w-[50%] mx-auto  flex flex-col gap-4"
+        className="w-[40%] mx-auto  flex flex-col gap-4"
         onSubmit={handleSubmit}
       >
         <h1 className="mx-auto text-3xl uppercase mt-20">Login</h1>
@@ -67,7 +70,7 @@ const SignIn = () => {
 
         <button
           disabled={loading}
-          className="p-3 bg-blue-600 text-white rounded-xl"
+          className="p-3 bg-orange-400 text-white rounded-xl"
           type="submit"
         >
           {loading ? "Loading..." : "Sign-in"}
