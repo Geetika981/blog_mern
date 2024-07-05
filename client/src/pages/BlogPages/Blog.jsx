@@ -7,9 +7,9 @@ const Blog = ({ id, desc, imageUrl, owner, title, updatedAt }) => {
     navigate(`/blog/${id}`);
   };
   return (
-    <div className="flex justify-around" onClick={handleClick}>
-      <img className="w-[100%] h-24 object-cover" src={imageUrl} alt={title} />
-      <div>
+    <div className="flex gap-24 mx-auto" onClick={handleClick}>
+      <img className="h-2/4" src={imageUrl} alt={title} />
+      <div className="mt-8">
         <h1 className="font-bold text-2xl italic">{title}</h1>
         <div className=" flex gap-3 ">
           <img className="w-12 h-12 rounded-full " src={owner[0].profile} />

@@ -31,7 +31,7 @@ const Home = () => {
     <ul className=" flex flex-col gap-4 w-[100%]  mx-auto">
       {blogs &&
         blogs.map((item, index) => (
-          <li className=" mx-auto m-10" key={index}>
+          <li className=" mx-auto m-10 hover:cursor-pointer " key={index}>
             <Blog
               id={item._id}
               desc={item.description}

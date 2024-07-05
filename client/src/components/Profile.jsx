@@ -1,4 +1,4 @@
-// import React, { useState } 
+// import React, { useState }
 // import { useDispatch, useSelector } from "react-redux";
 // // import {
 // //   updateuserStart,
@@ -40,7 +40,6 @@
 // //     //   dispatch(updateuserFailure(error));
 // //     // }
 // //   };
-
 
 // // // export default Profile;
 
@@ -107,34 +106,37 @@
 
 // export default Profile;
 
-import React from 'react'
+import React from "react";
 import { logoutSuccess, logoutFailure } from "../redux/user/userSlice";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const logoutHandler = async () => {
-  try {
-    const res = await fetch("http://localhost:4000/api/v1/user/logout", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await res.json();
-    dispatch(logoutSuccess());
-  } catch (error) {
-    console.log(error);
-  }
-};
+    try {
+      const res = await fetch("http://localhost:4000/api/v1/user/logout", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      dispatch(logoutSuccess());
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <button
-  className="p-3 bg-red-600 text-white rounded-xl"
-  onClick={logoutHandler}
->
-  logout
-</button>
-  )
-}
+    <div>
+      <form > Update </form>
+      <button
+        className="p-3 bg-red-600 text-white rounded-xl"
+        onClick={logoutHandler}
+      >
+        logout
+      </button>
+    </div>
+  );
+};
 
-export default Profile
+export default Profile;

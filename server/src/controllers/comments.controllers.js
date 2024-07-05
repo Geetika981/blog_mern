@@ -3,6 +3,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Blog } from "../models/blog.models.js";
 import { Comment } from "../models/comments.models.js";
+import { isValidObjectId } from "mongoose";
+import mongoose from "mongoose";
 
 const createComment = asyncHandler(async (req, res) => {
   const { blogId } = req.params;
@@ -34,9 +36,6 @@ const createComment = asyncHandler(async (req, res) => {
 
 const getAllComments = asyncHandler(async (req, res) => {
   const { blogId } = req.params;
-  if (!content) {
-    throw new ApiError(400, "Content is required");
-  }
   if (!isValidObjectId(blogId)) {
     throw new ApiError(400, "invalid blogid");
   }

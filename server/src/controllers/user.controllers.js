@@ -60,12 +60,14 @@ const generateAccessAndRefreshToken = async (userId) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  if ((!username && !email) || !password) {
+  if (!username || !password) {
     throw new ApiError(400, "All fields are required");
   }
-  const user = await User.findOne({
-    $or: [{ username }, { email }],
-  });
+  let user=await User.findOne({username:username});
+  if(!user){
+    user=await User.findOne({email:username});
+  }
+ 
 
   if (!user) {
     throw new ApiError(400, "User does not exists");
@@ -109,7 +111,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const { username, email, about } = req.body;
+  const { username, about } = req.body;
   const user = await User.findById(req.user._id);
   if (!user) {
     throw new ApiError(400, "unauthorized access");
@@ -125,13 +127,7 @@ const updateUser = asyncHandler(async (req, res) => {
     }
     user.username = username;
   }
-  if (email) {
-    const userfnd = await User.findOne({ email });
-    if (userfnd) {
-      throw new ApiError(400, "email already exists..please choose unique one");
-    }
-    user.email = email;
-  }
+  
   if (about) {
     user.about = about;
   }
